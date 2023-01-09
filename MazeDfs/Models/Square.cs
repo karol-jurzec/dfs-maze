@@ -8,11 +8,27 @@ namespace MazeDfs.Models;
 public class Square {
     public PointF Coordiantes { get; set; } 
 
+    public Square(float x, float y) {
+        Coordiantes = new PointF(x, y);
+
+        Visited = false;
+        RightSide = true;
+        LeftSide = true;
+        TopSide = true;
+        BottomSide = true;
+    }
+
+    public bool Visited { get; set; }
     public bool RightSide { get; set; }
     public bool LeftSide { get; set; }
     public bool BottomSide { get; set; }
     public bool TopSide { get; set; }
 
+
+    public Square LeftNeighbour { get; set; }
+    public Square RightNeighbour { get; set; }
+    public Square TopNeighbour { get; set; }
+    public Square BottomNeighbour { get; set; }
 
     public float width = Form1.cellWidth;
 
