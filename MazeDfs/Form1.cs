@@ -24,23 +24,27 @@ namespace MazeDfs {
         private static int _n = 100; //wymiary szerokosc
         private static int _m = 100; //wymiary wysokosc
 
-        public static float cellWidth = 4.0F;
+        public static float cellWidth = 8.0F;
 
 
         private bool _drawBoard;
         private bool _solveMaze;
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void InitBoard(int width, int height) {
             _drawBoard = false;
             _solveMaze = false;
-            bmp = new Bitmap(_width, _height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             panel1.BackgroundImage = bmp;
             g = Graphics.FromImage(panel1.BackgroundImage);
+            cellWidth = width * 8.0F / 512; 
             g.Clear(backgroundColor);
         }
 
-        private void ConnectSquares() {
+        private void Form1_Load(object sender, EventArgs e) {
+            InitBoard(512, 512);
+        }
 
+        private void ConnectSquares() {
             Square visitedSquare = new Square(-100, -100);
             visitedSquare.Visited = true;
 
@@ -141,6 +145,10 @@ namespace MazeDfs {
             }
         }
 
+        private void DisposeElements() {
+            
+        }
+
         private void panel1_Paint(object sender, PaintEventArgs e) {
 
             if( _drawBoard ) {
@@ -167,9 +175,15 @@ namespace MazeDfs {
             _n = Int32.Parse(textBox2.Text);
             _m = Int32.Parse(textBox1.Text);
 
+            int bitmapWidth = Int32.Parse(textBox4.Text);
+            int bitmapHeight = Int32.Parse(textBox3.Text);
 
+            cellWidth = bitmapWidth / _n;
+
+            
 
             _drawBoard = true;
+            squares.Clear();
             panel1.Invalidate();
         }
     }
