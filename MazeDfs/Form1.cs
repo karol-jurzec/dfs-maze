@@ -1,3 +1,4 @@
+using MazeDfs.Memento;
 using MazeDfs.Models;
 using MazeDfs.Source;
 using System.DirectoryServices.ActiveDirectory;
@@ -13,10 +14,16 @@ namespace MazeDfs {
 
         public static Color backgroundColor = Color.DeepSkyBlue;
 
+            
         Graphics g;
         Pen p;
         Bitmap bmp;
-        List<Square> squares = new();
+
+        static List<Square> squares = new();
+       
+        static Originator originator = new(squares);
+        static Caretaker caretaker = new(originator);
+
 
         private int _width = 512;
         private int _height = 512;
@@ -156,6 +163,7 @@ namespace MazeDfs {
                 ConnectSquares();
                 MazeDfsGenerator.CreateMaze(squares, e);
 
+
                 PrepareToSolve();
                 var solvePath = MazeSolver.SolveMaze(squares);
                 DrawSolvePath(solvePath, e);
@@ -175,16 +183,28 @@ namespace MazeDfs {
             _n = Int32.Parse(textBox2.Text);
             _m = Int32.Parse(textBox1.Text);
 
-            int bitmapWidth = Int32.Parse(textBox4.Text);
-            int bitmapHeight = Int32.Parse(textBox3.Text);
-
-            cellWidth = bitmapWidth / _n;
+            cellWidth = 512 / _n;
 
             
 
             _drawBoard = true;
             squares.Clear();
             panel1.Invalidate();
+        }
+
+        private void button2_Click(object sender, EventArgs e) {
+            MazeMemento selected = (MazeMemento)listBox1.SelectedItem;
+
+            if( selected != null ) {
+                caretaker.Restore(selected);
+                squares = selected.GetMaze();
+                squares.Clear();
+                panel1.Invalidate();
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e) {
+            listBox1.Items.Add(caretaker.Save());
         }
     }
 }
